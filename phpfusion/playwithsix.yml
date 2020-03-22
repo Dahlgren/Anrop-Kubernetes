@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: playwithsix
+  labels:
+    run: playwithsix
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    name: public
+  selector:
+    run: playwithsix
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: playwithsix
+spec:
+  selector:
+    matchLabels:
+      run: playwithsix
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: playwithsix
+    spec:
+      containers:
+      - name: playwithsix
+        image: anrop/anrop-playwithsix
+        env:
+          - name: PORT
+            value: '8080'
+          - name: NEW_RELIC_APP_NAME
+            value: playwithsix.anrop.se
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: newrelic
+                key: licenseKey
+        ports:
+          - containerPort: 8080
+      restartPolicy: Always
