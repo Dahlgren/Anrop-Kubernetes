@@ -1,0 +1,63 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: rails
+  labels:
+    run: rails
+spec:
+  ports:
+  - port: 8080
+    protocol: TCP
+    name: public
+  selector:
+    run: rails
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rails
+spec:
+  selector:
+    matchLabels:
+      run: rails
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: rails
+    spec:
+      containers:
+      - name: rails
+        image: anrop/aar-rails
+        env:
+          - name: ACCESS_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: aar
+                key: accessToken
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                name: postgres
+                key: url
+          - name: NEW_RELIC_APP_NAME
+            value: rails.aar.anrop.se
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: newrelic
+                key: licenseKey
+          - name: PORT
+            value: '8080'
+          - name: RACK_ENV
+            value: production
+          - name: RAILS_ENV
+            value: production
+          - name: SECRET_KEY_BASE
+            valueFrom:
+              secretKeyRef:
+                name: rails
+                key: secretKeyBase
+        ports:
+          - containerPort: 8080
+      restartPolicy: Always
