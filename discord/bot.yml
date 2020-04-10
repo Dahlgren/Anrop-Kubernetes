@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bot
+spec:
+  selector:
+    matchLabels:
+      run: bot
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: bot
+    spec:
+      containers:
+      - name: bot
+        image: anrop/anrop-discord-bot
+        env:
+          - name: DISCORD_TOKEN
+            valueFrom:
+              secretKeyRef:
+                name: discord
+                key: token
+      restartPolicy: Always
