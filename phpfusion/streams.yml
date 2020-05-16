@@ -51,6 +51,11 @@ spec:
               secretKeyRef:
                 name: twitch
                 key: clientId
+          - name: TWITCH_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                name: twitch
+                key: clientSecret
         ports:
           - containerPort: 8080
       restartPolicy: Always
