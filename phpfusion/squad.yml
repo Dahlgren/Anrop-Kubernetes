@@ -35,6 +35,13 @@ spec:
               secretKeyRef:
                 name: mysql
                 key: url
+          - name: NEW_RELIC_APP_NAME
+            value: squad.anrop.se
+          - name: NEW_RELIC_LICENSE_KEY
+            valueFrom:
+              secretKeyRef:
+                name: newrelic
+                key: licenseKey
           - name: PORT
             value: '8080'
         ports:
