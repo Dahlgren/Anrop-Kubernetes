@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+spec:
+  selector:
+    matchLabels:
+      run: worker
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: worker
+    spec:
+      containers:
+      - name: worker
+        image: anrop/tac-scribe
+        env:
+          - name: DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: host
+          - name: DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: name
+          - name: DB_PASS
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: pass
+          - name: DB_PORT
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: port
+          - name: DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: database
+                key: user
+          - name: TACVIEW_CLIENT_NAME
+            value: TacScribe
+          - name: TACVIEW_HOST
+            value: dcs.anrop.se
+          - name: TACVIEW_PASS
+            valueFrom:
+              secretKeyRef:
+                name: tacview
+                key: pass
+          - name: TACVIEW_PORT
+            value: '42674'
+      restartPolicy: Always
