@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: steeldivision2
+  namespace: eugensystems
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: steeldivision2
+  template:
+    metadata:
+      labels:
+        app: steeldivision2
+    spec:
+      containers:
+        - name: steeldivision2
+          image: eugensystems/steeldivision2
+          imagePullPolicy: Always
+  serviceName: steeldivision2

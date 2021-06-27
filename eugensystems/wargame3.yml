@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: wargame3
+  namespace: eugensystems
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: wargame3
+  template:
+    metadata:
+      labels:
+        app: wargame3
+    spec:
+      containers:
+        - name: wargame3
+          image: eugensystems/wargame3
+          imagePullPolicy: Always
+  serviceName: wargame3
